@@ -1,0 +1,64 @@
+{
+  "name": "seq_label",
+  "n_gpu": 1,
+  "model_arch": {
+    "type": "Bert_CRF",
+    "args": {
+      "bert_path": "/data/lizhen/workspace/named_entity_recognition/data/pretrained_model/chinese_roberta_wwm_ext_pytorch",
+      "bert_train": true,
+      "dropout": 0.5,
+      "num_tags": 9
+    }
+  },
+  "data_set": {
+    "type": "MilitaryDataSet",
+    "args": {
+      "data_dir": "data/military_ner/train",
+      "valid_size": 0.15,
+      "bert_path": "/data/lizhen/workspace/named_entity_recognition/data/pretrained_model/chinese_roberta_wwm_ext_pytorch"
+    }
+  },
+  "test1_set": {
+    "type": "MilitaryDataSet",
+    "args": {
+      "data_dir": "data/military_ner",
+      "test": true,
+      "bert_path": "/data/lizhen/workspace/named_entity_recognition/data/pretrained_model/chinese_roberta_wwm_ext_pytorch"
+    }
+  },
+  "data_loader": {
+    "type": "DataLoader",
+    "args": {
+      "shuffle": true,
+      "batch_size": 8
+    }
+  },
+  "optimizer": {
+    "type": "AdamW",
+    "args": {
+    }
+  },
+  "loss": [
+    "multi_label_crossentropy_loss"
+  ],
+  "metrics": [
+"batch_precision",
+    "batch_recall",
+    "batch_f1"
+  ],
+  "lr_scheduler": {
+    "type": "get_linear_schedule_with_warmup",
+    "args": {
+      "num_warmup_steps": 3
+    }
+  },
+  "trainer": {
+    "epochs": 200,
+    "saved": "saved/ner",
+    "save_period": 1,
+    "verbosity": 2,
+    "monitor": "max val_f",
+    "early_stop": 10,
+    "tensorboard": true
+  }
+}
